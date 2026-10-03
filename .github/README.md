@@ -4,10 +4,10 @@ YTDownloader è una semplice applicazione grafica basata su `yt-dlp` e `CustomTk
 
 Questo repository è un fork del progetto originale di Kerlooo, modificato per aggiungere:
 
-- supporto al download video in MP4
-- gestione di FFmpeg
-- compatibilità verificata su Windows 11 e Linux
-- alcune correzioni relative all'interfaccia grafica
+- supporto al download video in MP4;
+- gestione automatica di FFmpeg su Windows e Linux;
+- compatibilità verificata su Windows 11 e LMDE 7 / Debian 13;
+- correzioni relative all'interfaccia grafica.
 
 ## Funzioni
 
@@ -23,7 +23,7 @@ Questo repository è un fork del progetto originale di Kerlooo, modificato per a
 
 # Installazione su Linux
 
-Testato su LMDE 7 / Debian 13.
+Testato su **LMDE 7 / Debian 13**.
 
 Clonare il repository:
 
@@ -67,26 +67,16 @@ Avviare il programma:
 python app.py
 ```
 
-## Nota su FFmpeg in Linux
+## FFmpeg su Linux
 
-Su Linux FFmpeg viene normalmente installato a livello di sistema:
+Su Linux FFmpeg viene normalmente installato a livello di sistema, ad esempio:
 
 ```text
 /usr/bin/ffmpeg
 /usr/bin/ffprobe
 ```
 
-`yt-dlp` può quindi trovarlo automaticamente tramite il `PATH`.
-
-Se in `app.py` è presente questa riga:
-
-```python
-"ffmpeg_location": BASE_DIR,
-```
-
-su Linux va commentata o rimossa.
-
-In caso contrario `yt-dlp` cercherà `ffmpeg` nella cartella del programma invece di utilizzare quello installato nel sistema.
+La versione attuale di `app.py` rileva automaticamente FFmpeg tramite il `PATH` di sistema. Non è quindi necessario modificare o commentare manualmente alcuna riga del codice.
 
 ---
 
@@ -133,13 +123,13 @@ Installare le dipendenze:
 python -m pip install -r requirements.txt
 ```
 
-È consigliato utilizzare:
+È consigliato utilizzare `python -m pip` invece del semplice comando `pip`, perché alcune configurazioni di sicurezza di Windows possono bloccare direttamente `pip.exe`.
+
+Avviare il programma:
 
 ```powershell
-python -m pip
+python app.py
 ```
-
-invece del semplice comando `pip`, perché alcune configurazioni di sicurezza di Windows possono bloccare direttamente `pip.exe`.
 
 ---
 
@@ -160,7 +150,7 @@ ffprobe.exe
 
 e copiarli nella cartella principale del programma, accanto ad `app.py`.
 
-La struttura sarà quindi simile a questa:
+Esempio:
 
 ```text
 YTDownloader/
@@ -172,13 +162,12 @@ YTDownloader/
 └── ...
 ```
 
-Su Windows può essere utilizzata questa impostazione in `app.py`:
+La versione attuale di `app.py` gestisce FFmpeg automaticamente:
 
-```python
-"ffmpeg_location": BASE_DIR,
-```
+1. cerca prima `ffmpeg` nel `PATH` di sistema;
+2. se non lo trova e il sistema è Windows, cerca `ffmpeg.exe` nella stessa cartella di `app.py`.
 
-In questo modo `yt-dlp` cercherà `ffmpeg.exe` e `ffprobe.exe` direttamente nella cartella del programma.
+Non è quindi necessario modificare il codice passando da Windows a Linux o viceversa.
 
 Windows può mostrare un avviso di sicurezza per `ffmpeg.exe` o `ffprobe.exe`.
 
@@ -189,45 +178,29 @@ Unblock-File .\ffmpeg.exe
 Unblock-File .\ffprobe.exe
 ```
 
-Avviare quindi il programma:
-
-```powershell
-python app.py
-```
-
 ---
 
-# Differenze tra Windows e Linux
+# Come viene rilevato FFmpeg
 
-## Linux
+Il programma usa `shutil.which("ffmpeg")` per cercare automaticamente FFmpeg nel `PATH`.
 
-FFmpeg è normalmente installato a livello di sistema:
+Se viene trovato, utilizza la cartella dell'eseguibile rilevato.
+
+Su Linux questo normalmente porta a:
 
 ```text
-/usr/bin/ffmpeg
-/usr/bin/ffprobe
+/usr/bin
 ```
 
-Non è quindi necessario specificare:
-
-```python
-"ffmpeg_location": BASE_DIR,
-```
-
-## Windows
-
-FFmpeg può essere copiato direttamente nella cartella del programma:
+Su Windows, se FFmpeg non è presente nel `PATH`, il programma verifica se esiste:
 
 ```text
 ffmpeg.exe
-ffprobe.exe
 ```
 
-In questo caso può essere utilizzato:
+nella stessa cartella di `app.py` e, in quel caso, usa direttamente quella directory.
 
-```python
-"ffmpeg_location": BASE_DIR,
-```
+Questo permette di mantenere **un solo `app.py` cross-platform**, senza dover usare versioni separate per Windows e Linux.
 
 ---
 
@@ -240,7 +213,9 @@ ffmpeg.exe
 ffprobe.exe
 ```
 
-non sono inclusi nel repository GitHub e devono essere scaricati separatamente.
+non sono inclusi nel repository GitHub e devono essere scaricati separatamente su Windows, salvo che FFmpeg sia già installato e disponibile nel `PATH`.
+
+Su Linux è sufficiente installare il pacchetto `ffmpeg` tramite il gestore pacchetti della distribuzione.
 
 L'applicazione utilizza `yt-dlp` come motore di download e FFmpeg per le operazioni di conversione e muxing.
 
@@ -250,12 +225,12 @@ L'applicazione utilizza `yt-dlp` come motore di download e FFmpeg per le operazi
 
 Questo progetto è un fork di:
 
-Kerlooo/YTDownloader
+**Kerlooo/YTDownloader**
 
 Modifiche principali di questo fork:
 
-- supporto MP4
-- correzioni per Windows
-- compatibilità Linux
-- gestione FFmpeg
-- documentazione aggiornata
+- supporto MP4;
+- correzioni per Windows;
+- compatibilità Linux;
+- rilevamento automatico di FFmpeg;
+- documentazione aggiornata.
