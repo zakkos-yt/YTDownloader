@@ -1,65 +1,79 @@
 # YTDownloader
-YTDownloader is my simple way to download mp3 audio from YT. There are many tools online to do it but they're full of ads and they're very slow so I decided to create my own tool that use `ytdlp` for downloading the audio and `customtinker` for the GUI.
 
-## How to use:
-### Linux (Tested on Arch)
-Clone the repo from github:
+YTDownloader è una semplice applicazione grafica basata su `yt-dlp` e `CustomTkinter` che permette di scaricare contenuti da YouTube in formato **MP3** o **MP4**.
+
+Questo repository è un fork del progetto originale di Kerlooo, modificato per aggiungere:
+
+- supporto al download video in MP4
+- gestione di FFmpeg
+- compatibilità verificata su Windows 11 e Linux
+- alcune correzioni relative all'interfaccia grafica
+
+## Funzioni
+
+- Download audio in MP3
+- Download video in MP4
+- Scelta della qualità MP3
+- Interfaccia grafica semplice
+- Cartella di destinazione configurabile
+- Supporto multilingua
+- Utilizzo di `ffmpeg` e `ffprobe` per conversione e unione dei flussi
+
+---
+
+# Installazione su Linux
+
+Testato su LMDE 7 / Debian 13.
+
+Clonare il repository:
+
 ```bash
-git clone https://github.com/Kerlooo/YTDownloader
+git clone https://github.com/zakkos-yt/YTDownloader.git
 cd YTDownloader
 ```
 
-Create and activate the venv:
+Installare i pacchetti di sistema necessari:
+
 ```bash
-python -m venv myenv
-source myenv/bin/activate
-pip install -r requirements.txt
+sudo apt update
+sudo apt install python3-tk ffmpeg
 ```
 
-Run the script:
-`python app.py` or `python3 app.py`
+`python3-tk` è necessario per l'interfaccia grafica basata su Tkinter.
 
-### Windows (Tested on 11)
-Clone the repo from github:
+`ffmpeg` e `ffprobe` sono necessari per la conversione audio e per l'unione dei flussi video e audio nei download MP4.
+
+Creare un ambiente virtuale:
+
 ```bash
-git clone https://github.com/Kerlooo/YTDownloader
-cd YTDownloader
+python3 -m venv ytvenv
 ```
 
-Create and activate the venv:
+Attivarlo:
+
 ```bash
-python -m venv myenv
-.\myenv\bin\activate
-pip install -r requirements.txt
+source ytvenv/bin/activate
 ```
 
-Run the script:
-`python app.py` or `python3 app.py`
+Installare le dipendenze Python:
 
-## Features
-| Feature | Description | Status |
-|---------|-------------|--------|
-| Download MP3 | Download audio from YouTube video/playlist | ✅ |
-| Quality selection | Choose audio quality (128,192,256,320) | ✅ |
-| Settings UI | Choose output folder and default quality | ✅ |
-| Threaded download | Downloads run in background thread | ✅ |
-| CustomTkinter UI | Simple GUI with dark theme | ✅ |
+```bash
+python -m pip install -r requirements.txt
+```
 
-## TODO
-- [ ] Better UI
-- [ ] Reset button for settings
-- [ ] Add support for video download
-- [ ] Progress bar
-- [ ] Add batch download
+Avviare il programma:
 
-## License
-This guide is distributed under the **Creative Commons Attribution 4.0 International (CC BY 4.0)** license.
+```bash
+python app.py
+```
 
-**You are free to:**
-- **Share** — copy and redistribute the material in any medium or format.
-- **Adapt** — remix, transform, and build upon the material for any purpose, even commercially.
+## Nota su FFmpeg in Linux
 
-**Under the following terms:**
-- **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made.
+Su Linux FFmpeg viene normalmente installato a livello di sistema:
 
-For more details, see the [LICENSE](LICENSE) file or visit [creativecommons.org](https://creativecommons.org/licenses/by/4.0/).
+```text
+/usr/bin/ffmpeg
+/usr/bin/ffprobe
+```
+
+`yt-dlp` può quindi trovarlo automaticamente tramite il `PATH`.
